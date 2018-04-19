@@ -7,6 +7,9 @@ export PATH=$PATH:$JAVA_HOME/bin
 export M2_HOME=/Users/zhaozhou/Documents/JAVA/apache-maven-3.5.3
 export PATH=$PATH:$M2_HOME/bin
 
+# git 
+alias ll='ls -la'
+alias gst='git status'
+alias ga='git add .'
 cowsay `fortune` |lolcat
-
 

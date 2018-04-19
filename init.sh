@@ -28,6 +28,12 @@ brew install mercurial
 brew install vim
 sudo mv /usr/bin/vim /usr/bin/vim72
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+cp vimrc ~/.vimrc
+vim +PluginInstall +qall
+
+# install git
+ssh-keygen -t rsa -C "zz.thoreau@gmail.com"
+pbcopy < ~/.ssh/id_rsa.pub
 
 
 
@@ -38,6 +44,9 @@ mkdir ~/Documents/JAVA
 cp apache-maven-3.5.3-bin.zip ~/Documents/JAVA
 unzip ~/Documents/JAVA/apache-maven-3.5.3-bin.zip
 
+# install gradle
+wget https://downloads.gradle.org/distributions/gradle-4.6-bin.zip
+unzip gradle-4.6-bin.zip
 
 # install cowsay
 brew install cowsay fortune lolcat
