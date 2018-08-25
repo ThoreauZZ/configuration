@@ -34,4 +34,12 @@ rocketmq-console
 docker pull styletang/rocketmq-console-ng
 docker run -e "JAVA_OPTS=-Drocketmq.namesrv.addr=192.168.33.10:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false" -p 8080:8080 -t styletang/rocketmq-console-ng
 
+##############################################
+echo "install zk"
+#############################################
+wget http://apache.fayea.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+tar zxvf zookeeper-3.4.6.tar.gz
+cd zookeeper-3.4.6
+mv config/zoo_simple.conf config/zoo.conf
+./bin/zkServer.sh start
 
