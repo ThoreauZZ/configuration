@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cloud-server-config
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloud-server-config
+    spec:
+      containers:
+      - name: cloud-server-config
+        volumeMounts:
+        - mountPath: /data/logs
+          name: logs
+        image: registry.cn-hangzhou.aliyuncs.com/thoreau/cloud-server-config
+        env:
+        - name: JAVA_OPTS
+          value: "-Xmx128m"
+        - name: SERVICE_PORT
+          value: "8080"
+        - name: REGISTRY_URL
+          value: http://cloud-server-discovery:8080/eureka
+        readinessProbe:
+          httpGet:
+            path: /info
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: logs
+        hostPath:
+          path: /data/logs
