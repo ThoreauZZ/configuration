@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.define "k8s-master" do |node|
+    node.vm.box = "centos/7"
+    node.vm.hostname = "master"
+    node.vm.network "private_network", ip: "192.168.99.110"
+    node.vm.provision "shell", path: "init-master.sh"
+    node.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+  end
+  config.vm.define "k8s-node1" do |node|
+    node.vm.box = "centos/7"
+    node.vm.hostname = "node1"
+    node.vm.network "private_network", ip: "192.168.99.111"
+    node.vm.provision "shell", path: "init-node.sh"
+    node.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+  end
+  # if Vagrant.has_plugin?("vagrant-proxyconf")
+  #  config.proxy.http     = "http://192.168.99.1:1087"
+  #  config.proxy.https    = "http://192.168.99.1:1087"
+  #  config.proxy.no_proxy = "localhost,127.0.0.1"
+  # end
+end
