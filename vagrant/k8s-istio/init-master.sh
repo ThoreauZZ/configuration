@@ -33,10 +33,16 @@ echo "Schedule pods on master: remove all taint key"
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 echo "####### Install flannel #############"
-
-cd "${HONE}"
+cd "${HONE}" 
 wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+# specific network iface
 sed -i '/--kube-subnet-mgr/a\        - --iface=eth1' kube-flannel.yml
+# kubernete add Taints node.kubernetes.io/not-ready:NoSchedule。 flannel must tolerations this taint
+# issues https://github.com/coreos/flannel/issues/1044
+# - key: node.kubernetes.io/not-ready
+# operator: Exists
+# effect: NoSchedule
+
 kubectl apply -f kube-flannel.yml
 
 kubectl get pods --all-namespaces
@@ -50,5 +56,7 @@ alias kgn='kubectl get nodes --all-namespaces -o wide'
 alias kgi='kubectl get ing --all-namespaces -o wide'
 EOF
 
+# Focus on status.addresses and annotations
 kubectl get nodes master -o yaml
+
 

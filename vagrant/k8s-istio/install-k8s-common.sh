@@ -2,7 +2,8 @@
 NODE_IP=$(ip addr|grep eth1 |grep inet|awk '{print $2}'|awk -F '/' '{print $1}')
 echo "########## NODE_IP=${NODE_IP} ##########"
 
-KUBE_VERSION=v1.11.2
+KUBE_VERSION=v1.12.0
+KUBELET_VERSION=1.12.0
 echo "export KUBE_VERSION=${KUBE_VERSION}" >> /etc/profile
 echo "export NODE_IP=${NODE_IP}" >> /etc/profile
 echo "########## KUBE_VERSION=${KUBE_VERSION} ##########"
@@ -85,7 +86,8 @@ EOF
 
 setenforce 0
 swapoff -a
-yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+yum install -y kubelet-${KUBELET_VERSION} kubectl-${KUBELET_VERSION} kubeadm-${KUBELET_VERSION} --disableexcludes=kubernetes
+# specific node InternalIP 
 cat <<EOF >/etc/sysconfig/kubelet
 KUBELET_EXTRA_ARGS= --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice --node-ip=${NODE_IP}
 EOF
