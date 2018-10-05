@@ -35,19 +35,25 @@ un_proxy_http(){
 }
 
 echo "################## Install docker with proxy ################"
-yum install -y docker
+yum remove -y docker*
+yum install -y yum-utils device-mapper-persistent-data lvm2
+# user aliyun repo replace https://download.docker.com/linux/centos/docker-ce.repo
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+yum makecache fast
+yum install -y --setopt=obsoletes=0 docker-ce-18.06.1.ce-3.el7
+
 if [ ! -z ${HTTP_PROXY} ]
 then
     echo "exist proxy ${HTTP_PROXY}......................."
     mkdir -p /etc/systemd/system/docker.service.d
     cat <<EOF > /etc/systemd/system/docker.service.d/http-proxy.conf
 [Service]
-Environment="HTTP_PROXY=${HTTP_PROXY}" NO_PROXY="localhost,127.0.0.1,docker.io,registry.docker-cn.com"
+Environment="HTTP_PROXY=${HTTP_PROXY}" NO_PROXY="localhost,127.0.0.1,docker.io,registry.docker-cn.com,registry.cn-hangzhou.aliyuncs.com"
 EOF
 
     cat <<EOF > /etc/systemd/system/docker.service.d/https-proxy.conf
 [Service]
-Environment="HTTPS_PROXY=${HTTP_PROXY}" NO_PROXY="localhost,127.0.0.1,docker.io,registry.docker-cn.com"
+Environment="HTTPS_PROXY=${HTTP_PROXY}" NO_PROXY="localhost,127.0.0.1,docker.io,registry.docker-cn.com,registry.cn-hangzhou.aliyuncs.com"
 EOF
 fi
 
@@ -84,8 +90,11 @@ repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
+# Set SELinux in permissive mode (effectively disabling it)
 setenforce 0
 swapoff -a
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
 yum install -y kubelet-${KUBELET_VERSION} kubectl-${KUBELET_VERSION} kubeadm-${KUBELET_VERSION} --disableexcludes=kubernetes
 # specific node InternalIP 
 cat <<EOF >/etc/sysconfig/kubelet
