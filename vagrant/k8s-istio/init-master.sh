@@ -7,12 +7,16 @@ echo "####### Kubeadm init #############"
 k8s_images=(kube-controller-manager-amd64 kube-apiserver-amd64 kube-scheduler-amd64 kube-proxy-amd64)
 for imageName in "${k8s_images[@]}"
 do
-  docker pull mirrorgooglecontainers/${imageName}:${KUBE_VERSION}
-  docker tag mirrorgooglecontainers/${imageName}:${KUBE_VERSION} k8s.gcr.io/${imageName}:${KUBE_VERSION}
-  docker rmi mirrorgooglecontainers/${imageName}:${KUBE_VERSION}
+  docker pull registry.cn-hangzhou.aliyuncs.com/k8s-release/${imageName}:${KUBE_VERSION}
+  docker tag registry.cn-hangzhou.aliyuncs.com/k8s-release//${imageName}:${KUBE_VERSION} k8s.gcr.io/${imageName}:${KUBE_VERSION}
+  docker rmi registry.cn-hangzhou.aliyuncs.com/k8s-release/${imageName}:${KUBE_VERSION}
 done
-docker pull coredns/coredns:1.1.3
-docker pull mirrorgooglecontainers/etcd-amd64:3.2.18
+docker pull registry.cn-hangzhou.aliyuncs.com/k8s-release/coredns:1.1.3
+docker tag registry.cn-hangzhou.aliyuncs.com/k8s-release/coredns:1.1.3 k8s.gcr.io/coredns:1.1.3
+docker rmi registry.cn-hangzhou.aliyuncs.com/k8s-release/coredns:1.1.3
+
+docker pull registry.cn-hangzhou.aliyuncs.com/k8s-release/etcd-amd64:3.2.18
+
 kubeadm config images pull
 
 # also can specify kubeadm init --config kubeadm.yaml
@@ -37,7 +41,7 @@ cd "${HONE}"
 wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 # specific network iface
 sed -i '/--kube-subnet-mgr/a\        - --iface=eth1' kube-flannel.yml
-# kubernete add Taints node.kubernetes.io/not-ready:NoSchedule。 flannel must tolerations this taint
+# kubernete v1.12.0 add Taints node.kubernetes.io/not-ready:NoSchedule。 flannel must tolerations this taint
 # issues https://github.com/coreos/flannel/issues/1044
 # - key: node.kubernetes.io/not-ready
 # operator: Exists

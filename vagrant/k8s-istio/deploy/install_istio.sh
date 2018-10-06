@@ -14,7 +14,7 @@ install_istio()
     source  /etc/profile
 
     sed -i 's#gcr.io/istio-release#istio#g' "${ISTIO_HOME}"/install/kubernetes/istio-demo.yaml
-    sed -i 's/memory: 2048Mi/memory: 800Mi/g' "${ISTIO_HOME}"/install/kubernetes/istio-demo.yaml
+    sed -i 's/memory: 2048Mi/memory: 200Mi/g' "${ISTIO_HOME}"/install/kubernetes/istio-demo.yaml
 
     kubectl apply -f ${ISTIO_HOME}/install/kubernetes/helm/istio/templates/crds.yaml
     kubectl apply -f ${ISTIO_HOME}/install/kubernetes/istio-demo.yaml

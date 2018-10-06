@@ -2,8 +2,8 @@
 NODE_IP=$(ip addr|grep eth1 |grep inet|awk '{print $2}'|awk -F '/' '{print $1}')
 echo "########## NODE_IP=${NODE_IP} ##########"
 
-KUBE_VERSION=v1.12.0
-KUBELET_VERSION=1.12.0
+KUBE_VERSION=v1.11.2
+KUBELET_VERSION=1.11.2
 echo "export KUBE_VERSION=${KUBE_VERSION}" >> /etc/profile
 echo "export NODE_IP=${NODE_IP}" >> /etc/profile
 echo "########## KUBE_VERSION=${KUBE_VERSION} ##########"
