@@ -48,12 +48,7 @@ then
     mkdir -p /etc/systemd/system/docker.service.d
     cat <<EOF > /etc/systemd/system/docker.service.d/http-proxy.conf
 [Service]
-Environment="HTTP_PROXY=${HTTP_PROXY}" NO_PROXY="localhost,127.0.0.1,docker.io,registry.docker-cn.com,registry.cn-hangzhou.aliyuncs.com"
-EOF
-
-    cat <<EOF > /etc/systemd/system/docker.service.d/https-proxy.conf
-[Service]
-Environment="HTTPS_PROXY=${HTTP_PROXY}" NO_PROXY="localhost,127.0.0.1,docker.io,registry.docker-cn.com,registry.cn-hangzhou.aliyuncs.com"
+Environment="HTTP_PROXY=${HTTP_PROXY}" "HTTPS_PROXY=${HTTP_PROXY}" NO_PROXY=localhost,127.0.0.1,.docker.io,.docker-cn.com,.aliyuncs.com"
 EOF
 fi
 
