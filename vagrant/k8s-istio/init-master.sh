@@ -30,7 +30,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 export KUBECONFIG=/etc/kubernetes/admin.conf
-echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /etc/profle
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /etc/profile
 
 token=$(kubeadm token create)
 crt_hash=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
