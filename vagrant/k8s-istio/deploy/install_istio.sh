@@ -13,7 +13,7 @@ install_istio()
     echo "export PATH=${ISTIO_HOME}/bin:$PATH" >> /etc/profile
     source  /etc/profile
 
-    sed -i 's#gcr.io/istio-release#istio#g' "${ISTIO_HOME}"/install/kubernetes/istio-demo.yaml
+    sed -i 's#gcr.io/istio-release#registry.cn-hangzhou.aliyuncs.com/my-istio-release#g' "${ISTIO_HOME}"/install/kubernetes/istio-demo.yaml
     sed -i 's/memory: 2048Mi/memory: 200Mi/g' "${ISTIO_HOME}"/install/kubernetes/istio-demo.yaml
 
     kubectl apply -f ${ISTIO_HOME}/install/kubernetes/helm/istio/templates/crds.yaml

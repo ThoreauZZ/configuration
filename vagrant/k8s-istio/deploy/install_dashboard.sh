@@ -2,8 +2,9 @@
 
 install_k8s_dashboard(){
   echo "install k8s dashboard"
-  wget https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+  #wget https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
   wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.0/src/deploy/recommended/kubernetes-dashboard.yaml
+  sed -i 's#k8s.gcr.io#registry.cn-hangzhou.aliyuncs.com/k8s-release#g' kubernetes-dashboard.yaml
   kubectl apply -f kubernetes-dashboard.yaml
   # access dashboard 
   ## 1 proxy
@@ -36,12 +37,15 @@ subjects:
 EOF
   kubectl apply -f k8s-dashboard-admin-user.yaml
   kubectl describe sa admin-user -n kube-system
-  token_secrets=$(kubectl describe sa admin-user -n kube-system |grep Tokens:|awk '{print $2}'token_secrets=$(kubectl describe sa admin-user -n kube-system |grep Tokens:|awk '{print $2}'))
+  token_secrets=$(kubectl describe sa admin-user -n kube-system |grep Tokens:|awk '{print $2}')
   kubectl -n kube-system get secret ${token_secrets} -o jsonpath={.data.token}|base64 -d
 
   # kubectl -n kube-system edit service kubernetes-dashboard
   # Change type: ClusterIP to type: NodePort
-  # kubectl -n kube-system get service kubernetes-dashboard
+  kubectl -n kube-system get service kubernetes-dashboard -o yaml| \
+  sed 's/ClusterIP/NodePort/g' | \
+  kubectl apply -f -
+  kubectl -n kube-system get service kubernetes-dashboard
 
 
   # Install heapster

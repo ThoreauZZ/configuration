@@ -1,9 +1,16 @@
+cat <<EOF >> kubeadm.yaml
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
+api:
+  advertiseAddress: "${NODE_IP}"
+imageRepository: k8s.gcr.io
 controllerManagerExtraArgs:
   horizontal-pod-autoscaler-use-rest-clients: "true"
   horizontal-pod-autoscaler-sync-period: "10s"
   node-monitor-grace-period: "10s"
 apiServerExtraArgs:
   runtime-config: "api/all=true"
-kubernetesVersion: "stable-1.11.2"
+  enable-admission-plugins: NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
+kubernetesVersion: "${KUBE_VERSION}"
+podNetworkCidr: "10.244.0.0/16"
+EOF

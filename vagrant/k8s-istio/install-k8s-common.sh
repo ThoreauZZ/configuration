@@ -8,6 +8,10 @@ echo "export KUBE_VERSION=${KUBE_VERSION}" >> /etc/profile
 echo "export NODE_IP=${NODE_IP}" >> /etc/profile
 echo "########## KUBE_VERSION=${KUBE_VERSION} ##########"
 
+systemctl mask firewalld.service
+systemctl stop firewalld.service
+systemctl disable iptables.service
+systemctl stop iptables.service
 
 HTTP_PROXY="http://192.168.99.1:1087"
 
