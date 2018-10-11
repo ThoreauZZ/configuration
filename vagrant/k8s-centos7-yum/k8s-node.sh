@@ -1,6 +1,6 @@
 #/usr/bin/env bash
 MASTER_IP=192.168.99.110
-NODE_IP=`ip addr|grep enp0s8 |grep inet|awk '{print $2}'|awk -F '/' '{print $1}'`
+NODE_IP=`ip addr|grep eth1 |grep inet|awk '{print $2}'|awk -F '/' '{print $1}'`
 if [ ! $MASTER_IP ] || [ ! $NODE_IP ]
 then
 	echo "MASTER_IP or NODE_IP is null"
@@ -9,7 +9,11 @@ fi
 
 echo "==================base install=================="
 
-yum install -y vim wget curl bind-utils net-tools telnet  lsof
+yum install -y wget
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum clean all
+yum makecache
+yum install -y vim wget curl bind-utils net-tools telnet lsof jq
 
 
 echo '=================install ntpd==================='
@@ -29,6 +33,7 @@ gpgcheck=0
 EOF
 yum -y install --enablerepo=virt7-docker-common-release kubernetes etcd flannel
 setenforce 0
+swapoff -a
 echo "===============config kubernetes================"
 mv -f /etc/kubernetes/config /etc/kubernetes/config.bak
 cat <<EOF >/etc/kubernetes/config
@@ -75,7 +80,7 @@ FLANNEL_ETCD_ENDPOINTS="http://${MASTER_IP}:2379"
 FLANNEL_ETCD_PREFIX="/kube-centos/network"
 # Any additional options that you want to pass
 #FLANNEL_OPTIONS=""
-FLANNEL_OPTIONS="-iface=enp0s8"
+FLANNEL_OPTIONS="-iface=eth1"
 EOF
 echo "==========start kube-proxy kubelet flanneld docker==========="
 for SERVICES in kube-proxy kubelet flanneld docker; do

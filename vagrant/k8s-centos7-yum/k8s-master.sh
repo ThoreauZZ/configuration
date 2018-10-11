@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #MASTER_IP=$1
-MASTER_IP=`ip addr|grep enp0s8 |grep inet|awk '{print $2}'|awk -F '/' '{print $1}'`
+MASTER_IP=`ip addr|grep eth1 |grep inet|awk '{print $2}'|awk -F '/' '{print $1}'`
 if [ ! $MASTER_IP ]
 then
 	echo "MASTER_IP is null"
@@ -9,8 +9,12 @@ fi
 
 echo "==================base install=================="
 
-yum install -y epel-release
+yum install -y wget
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum clean all
+yum makecache
 yum install -y vim wget curl bind-utils net-tools telnet lsof jq
+
 
 echo "=================install ntpd==================="
 yum -y install ntp
@@ -50,8 +54,9 @@ KUBE_ALLOW_PRIV="--allow-privileged=false"
 KUBE_MASTER="--master=http://${MASTER_IP}:8080"
 EOF
 setenforce 0
-#systemctl disable iptables-services firewalld
-#systemctl stop iptables-services firewalld
+swapoff -a
+systemctl disable iptables-services firewalld
+systemctl stop iptables-services firewalld
 
 
 echo "================= config etcd======================"
@@ -90,7 +95,7 @@ FLANNEL_ETCD_ENDPOINTS="http://${MASTER_IP}:2379"
 FLANNEL_ETCD_PREFIX="/kube-centos/network"
 # Any additional options that you want to pass
 #FLANNEL_OPTIONS=""
-FLANNEL_OPTIONS="-iface=enp0s8"
+FLANNEL_OPTIONS="-iface=eth1"
 EOF
 
 
@@ -100,3 +105,9 @@ for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler flann
 	systemctl enable $SERVICES
 	systemctl status $SERVICES
 done
+
+# 命令补齐
+yum install -y bash-completion
+source /usr/share/bash-completion/bash_completion
+source <(kubectl completion bash)
+echo "source <(kubectl completion bash)" >> ~/.bashrc
