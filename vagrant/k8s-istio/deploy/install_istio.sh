@@ -5,6 +5,7 @@ pwd
 
 install_istio()
 {
+    export ISTIO_VERSION=1.0.2
     curl -L https://git.io/getLatestIstio | sh -
     istio_tmp=$(echo istio*)
     ISTIO_HOME="/opt/$istio_tmp"
@@ -22,7 +23,16 @@ install_istio()
     kubectl get pods -n istio-system
 
 }
-
+uninstall_istio()
+{
+   kubectl delete -f ${ISTIO_HOME}/install/kubernetes/helm/istio/templates/crds.yaml
+   kubectl delete -f ${ISTIO_HOME}/install/kubernetes/istio-demo.yaml
+   if [ -d ${ISTIO_HOME} ]
+   then
+	rm -rf ${ISTIO_HOME}
+   fi
+   sed -i -e '/ISTIO_HOME\|istio/d' /etc/profile
+}
 bookinfo_deloy(){
     # label the default namespace with istio-injection=enabled
     kubectl label namespace default istio-injection=enabled
