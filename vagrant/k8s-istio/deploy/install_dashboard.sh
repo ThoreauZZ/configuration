@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+ARG1=$1
 
 install_k8s_dashboard(){
   echo "install k8s dashboard"
@@ -83,7 +84,7 @@ metadata:
 spec:
   #tls:
   #- secretName: tls-secret
-  rules:
+  rinstall_nginx_igressules:
   - host: ngnix.k8s.com
     http:
       paths:
@@ -98,4 +99,13 @@ main(){
   install_k8s_dashboard
 }
 
-main
+if [ "${ARG1}" == "dashboard" ]
+then
+    install_k8s_dashboard
+fi
+
+if [ "${ARG1}" == "igress" ]
+then
+    install_nginx_igress
+fi
+echo Please input arg dashboard or igress
