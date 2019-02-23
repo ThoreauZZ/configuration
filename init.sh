@@ -2,28 +2,30 @@
 #先安装vitrulbox,vscode
 #xcode-select --install
 
+# install brew 
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew update
+
+
 HOME_DIR=$(pwd)
 
-## install brew
+# install zsh and oh-my-zs
+brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 chsh -s /bin/zsh
-brew update
+cd ~/.oh-my-zsh/themes
+git clone https://github.com/dracula/zsh.git
+mv zsh/dracula.zsh-theme .
+rm -rf zsh
+sed -i "" 's/ZSH_THEME="robbyrussell"/ZSH_THEME="dracula"/' ~/.zshrc
 
 # install autojump
 brew install autojump
+autojump
 
 
 cd ~/Downloads
 brew install mycli tldr thefuck htop jq wget 
-
-# install zsh
-brew install zsh
-cd ~/.oh-my-zsh/themes
-git clone https://github.com/dracula/zsh.git
-mv zsh/dracula.zsh-theme .
-rm -rf 
-sed -i "" 's/ZSH_THEME="robbyrussell"/ZSH_THEME="dracula"/' ~/.zshrc
-
 
 
 # upgrade vim
@@ -38,7 +40,6 @@ vim +PluginInstall +qall
 # install git
 ssh-keygen -t rsa -C "zz.thoreau@gmail.com"
 pbcopy < ~/.ssh/id_rsa.pub
-
 
 
 
@@ -60,9 +61,3 @@ source ~/.bash_profile
 
 brew install docker docker-machine
 docker-machine create --driver=virtualbox default
-
-
-
-
-
-
