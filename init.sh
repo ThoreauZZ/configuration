@@ -6,7 +6,11 @@ HOME_DIR=$(pwd)
 
 ## install brew
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+chsh -s /bin/zsh
 brew update
+
+# install autojump
+brew install autojump
 
 
 cd ~/Downloads
@@ -56,6 +60,7 @@ source ~/.bash_profile
 
 brew install docker docker-machine
 docker-machine create --driver=virtualbox default
+
 
 
 
