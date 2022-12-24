@@ -13,3 +13,4 @@ alias gst='git status'
 alias ga='git add .'
 cowsay `fortune` |lolcat
 
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
