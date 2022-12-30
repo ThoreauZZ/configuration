@@ -61,3 +61,9 @@ source ~/.bash_profile
 
 brew install docker docker-machine
 docker-machine create --driver=virtualbox default
+
+## 桌面软件
+#  appCleaner draw.io
+# git录制：https://www.cockos.com/licecap/
+# 分屏切屏: https://www.spectacleapp.com/
+# 画图：https://github.com/jgraph/drawio-deskto
