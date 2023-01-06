@@ -9,15 +9,23 @@ brew update
 
 HOME_DIR=$(pwd)
 
-# install zsh and oh-my-zs
+# install zsh and oh-my-zsg
 brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 chsh -s /bin/zsh
+
+#  oh-my-zsh set
 cd ~/.oh-my-zsh/themes
 git clone https://github.com/dracula/zsh.git
 mv zsh/dracula.zsh-theme .
+mv mv zsh/lib .
 rm -rf zsh
 sed -i "" 's/ZSH_THEME="robbyrussell"/ZSH_THEME="dracula"/' ~/.zshrc
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# config plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
 # install autojump
 brew install autojump
